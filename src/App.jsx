@@ -20,6 +20,7 @@ function App() {
   const [products, setProducts] = useState(initialProducts)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
+  const [deletingProduct, setDeletingProduct] = useState(null)
   const [formValues, setFormValues] = useState({ name: '', price: '' })
 
   const closeAddDialog = () => {
@@ -35,6 +36,15 @@ function App() {
   const closeEditDialog = () => {
     setEditingProduct(null)
     setFormValues({ name: '', price: '' })
+  }
+
+  const confirmDelete = () => {
+    if (!deletingProduct) return
+
+    setProducts((currentProducts) =>
+      currentProducts.filter((product) => product.id !== deletingProduct.id),
+    )
+    setDeletingProduct(null)
   }
 
   const handleSubmit = (event) => {
@@ -104,13 +114,22 @@ function App() {
               <p className="product-id">ID: {product.id}</p>
               <h3>{product.name}</h3>
               <p className="product-price">{formatPrice(product.price)}</p>
-              <button
-                className="button button-secondary"
-                type="button"
-                onClick={() => openEditDialog(product)}
-              >
-                Edit
-              </button>
+              <div className="product-actions">
+                <button
+                  className="button button-secondary"
+                  type="button"
+                  onClick={() => openEditDialog(product)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="button button-danger-outline"
+                  type="button"
+                  onClick={() => setDeletingProduct(product)}
+                >
+                  Hapus
+                </button>
+              </div>
             </article>
           ))}
         </div>
@@ -247,6 +266,57 @@ function App() {
                 </button>
               </div>
             </form>
+          </section>
+        </div>
+      )}
+
+      {deletingProduct && (
+        <div className="modal-backdrop">
+          <section
+            className="product-dialog delete-dialog"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="delete-dialog-title"
+            aria-describedby="delete-dialog-description"
+          >
+            <button
+              className="dialog-close"
+              type="button"
+              aria-label="Tutup dialog"
+              onClick={() => setDeletingProduct(null)}
+            >
+              ×
+            </button>
+            <span className="delete-icon" aria-hidden="true">⌫</span>
+            <h2 id="delete-dialog-title">Hapus Produk?</h2>
+            <p className="dialog-description" id="delete-dialog-description">
+              Produk yang dihapus tidak dapat dikembalikan.
+            </p>
+
+            <div className="delete-product-preview">
+              <p className="product-id">ID: {deletingProduct.id}</p>
+              <h3>{deletingProduct.name}</h3>
+              <p className="product-price">
+                {formatPrice(deletingProduct.price)}
+              </p>
+            </div>
+
+            <div className="dialog-actions">
+              <button
+                className="button button-secondary"
+                type="button"
+                onClick={() => setDeletingProduct(null)}
+              >
+                Batal
+              </button>
+              <button
+                className="button button-danger"
+                type="button"
+                onClick={confirmDelete}
+              >
+                Hapus Produk
+              </button>
+            </div>
           </section>
         </div>
       )}

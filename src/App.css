@@ -100,6 +100,15 @@
   font-weight: 750;
 }
 
+.product-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.product-actions .button {
+  flex: 1;
+}
+
 .button {
   min-height: 42px;
   padding: 9px 16px;
@@ -137,6 +146,16 @@
 
 .button-secondary:hover {
   background: #eff5ff;
+}
+
+.button-danger-outline {
+  border-color: #dc3545;
+  background: #fff;
+  color: #c92a3a;
+}
+
+.button-danger-outline:hover {
+  background: #fff1f2;
 }
 
 .modal-backdrop {
@@ -249,6 +268,53 @@
   background: #1d4ed8;
 }
 
+.delete-dialog {
+  text-align: center;
+}
+
+.delete-icon {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  margin: 8px auto 18px;
+  place-items: center;
+  border-radius: 18px;
+  background: #fff1f2;
+  color: #dc3545;
+  font-size: 2rem;
+}
+
+.delete-product-preview {
+  margin-top: 22px;
+  padding: 16px 18px;
+  border: 1px solid #dfe4ec;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.delete-product-preview h3 {
+  margin: 6px 0;
+  color: #14213d;
+  font-size: 1.2rem;
+}
+
+.delete-product-preview .product-price {
+  margin: 0;
+}
+
+.delete-dialog .dialog-actions {
+  justify-content: center;
+}
+
+.button-danger {
+  background: #dc3545;
+  color: #fff;
+}
+
+.button-danger:hover {
+  background: #bd2635;
+}
+
 @media (max-width: 600px) {
   .page-shell {
     width: min(100% - 32px, 1440px);
@@ -281,6 +347,10 @@
 
   .dialog-actions .button {
     width: 100%;
+  }
+
+  .product-actions {
+    flex-direction: column;
   }
 
   .product-grid {
