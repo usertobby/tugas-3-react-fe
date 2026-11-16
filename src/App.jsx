@@ -110,51 +110,65 @@ function App() {
 
   return (
     <main className="page-shell">
-      <header className="page-header">
-        <div>
-          <p className="eyebrow">Katalog</p>
-          <h1>Manajemen Produk</h1>
-          <p className="page-description">
-            Kelola daftar produk dan harga dalam satu tempat.
-          </p>
-        </div>
-        <button
-          className="button button-primary add-product-button"
-          type="button"
-          onClick={() => setIsAddDialogOpen(true)}
-        >
-          <span aria-hidden="true">＋</span> Tambah Produk
-        </button>
+      <header className="topbar">
+        <a className="brand" href="/" aria-label="Produkly beranda">
+          <span className="brand-mark" aria-hidden="true">P</span>
+          <span>Produkly</span>
+        </a>
+
+        <label className="topbar-search">
+          <svg
+            className="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle cx="10.8" cy="10.8" r="6.8" />
+            <path d="m16 16 4.2 4.2" />
+          </svg>
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Cari nama produk..."
+            aria-label="Cari nama produk"
+          />
+          {searchTerm && (
+            <button
+              className="clear-search-button"
+              type="button"
+              aria-label="Hapus pencarian"
+              onClick={() => setSearchTerm('')}
+            >
+              &times;
+            </button>
+          )}
+        </label>
       </header>
 
       <section className="product-section" aria-label="Daftar produk">
+        <div className="management-header">
+          <div>
+            <p className="eyebrow">Katalog</p>
+            <h1>Manajemen Produk</h1>
+            <p className="page-description">
+              Kelola daftar produk dan harga dalam satu tempat.
+            </p>
+          </div>
+          <button
+            className="button button-primary add-product-button"
+            type="button"
+            onClick={() => setIsAddDialogOpen(true)}
+          >
+            <span aria-hidden="true">+</span> Tambah Produk
+          </button>
+        </div>
+
         <div className="section-heading">
           <h2>Daftar Produk</h2>
           <span className="product-count" aria-live="polite">
             Menampilkan {visibleProducts.length} dari {products.length} produk
           </span>
-        </div>
-
-        <div className="search-row">
-          <label className="search-field">
-            <span className="search-icon" aria-hidden="true">⌕</span>
-            <input
-              type="search"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Cari nama produk..."
-              aria-label="Cari nama produk"
-            />
-          </label>
-          {searchTerm && (
-            <button
-              className="clear-search-button"
-              type="button"
-              onClick={() => setSearchTerm('')}
-            >
-              Hapus pencarian
-            </button>
-          )}
         </div>
 
         {visibleProducts.length > 0 ? (
