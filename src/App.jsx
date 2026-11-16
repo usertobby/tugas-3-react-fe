@@ -1,5 +1,20 @@
 import './App.css'
 
+const products = [
+  { id: 1, name: 'Pulpen', price: 5000 },
+  { id: 2, name: 'Buku Tulis', price: 12000 },
+  { id: 3, name: 'Spidol', price: 8000 },
+  { id: 4, name: 'Penggaris', price: 6000 },
+  { id: 5, name: 'Penghapus', price: 3000 },
+]
+
+const formatPrice = (price) =>
+  new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0,
+  }).format(price)
+
 function App() {
   return (
     <main className="page-shell">
@@ -13,13 +28,20 @@ function App() {
         </div>
       </header>
 
-      <section className="content-panel" aria-label="Daftar produk">
-        <div className="empty-state">
-          <span className="empty-state-icon" aria-hidden="true">
-            □
-          </span>
-          <h2>Daftar produk akan muncul di sini</h2>
-          <p>Produk dapat dikelola dari halaman ini.</p>
+      <section className="product-section" aria-label="Daftar produk">
+        <div className="section-heading">
+          <h2>Daftar Produk</h2>
+          <span className="product-count">{products.length} produk</span>
+        </div>
+
+        <div className="product-grid">
+          {products.map((product) => (
+            <article className="product-card" key={product.id}>
+              <p className="product-id">ID: {product.id}</p>
+              <h3>{product.name}</h3>
+              <p className="product-price">{formatPrice(product.price)}</p>
+            </article>
+          ))}
         </div>
       </section>
     </main>
