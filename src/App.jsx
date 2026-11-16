@@ -21,7 +21,12 @@ function App() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
   const [deletingProduct, setDeletingProduct] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
   const [formValues, setFormValues] = useState({ name: '', price: '' })
+  const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase('id-ID')
+  const visibleProducts = products.filter((product) =>
+    product.name.toLocaleLowerCase('id-ID').includes(normalizedSearchTerm),
+  )
 
   const closeAddDialog = () => {
     setIsAddDialogOpen(false)
@@ -105,34 +110,66 @@ function App() {
       <section className="product-section" aria-label="Daftar produk">
         <div className="section-heading">
           <h2>Daftar Produk</h2>
-          <span className="product-count">{products.length} produk</span>
+          <span className="product-count" aria-live="polite">
+            Menampilkan {visibleProducts.length} dari {products.length} produk
+          </span>
         </div>
 
-        <div className="product-grid">
-          {products.map((product) => (
-            <article className="product-card" key={product.id}>
-              <p className="product-id">ID: {product.id}</p>
-              <h3>{product.name}</h3>
-              <p className="product-price">{formatPrice(product.price)}</p>
-              <div className="product-actions">
-                <button
-                  className="button button-secondary"
-                  type="button"
-                  onClick={() => openEditDialog(product)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="button button-danger-outline"
-                  type="button"
-                  onClick={() => setDeletingProduct(product)}
-                >
-                  Hapus
-                </button>
-              </div>
-            </article>
-          ))}
+        <div className="search-row">
+          <label className="search-field">
+            <span className="search-icon" aria-hidden="true">⌕</span>
+            <input
+              type="search"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Cari nama produk..."
+              aria-label="Cari nama produk"
+            />
+          </label>
+          {searchTerm && (
+            <button
+              className="clear-search-button"
+              type="button"
+              onClick={() => setSearchTerm('')}
+            >
+              Hapus pencarian
+            </button>
+          )}
         </div>
+
+        {visibleProducts.length > 0 ? (
+          <div className="product-grid">
+            {visibleProducts.map((product) => (
+              <article className="product-card" key={product.id}>
+                <p className="product-id">ID: {product.id}</p>
+                <h3>{product.name}</h3>
+                <p className="product-price">{formatPrice(product.price)}</p>
+                <div className="product-actions">
+                  <button
+                    className="button button-secondary"
+                    type="button"
+                    onClick={() => openEditDialog(product)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="button button-danger-outline"
+                    type="button"
+                    onClick={() => setDeletingProduct(product)}
+                  >
+                    Hapus
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="product-empty-state" role="status">
+            {products.length === 0
+              ? 'Belum ada produk.'
+              : `Produk dengan nama “${searchTerm.trim()}” tidak ditemukan.`}
+          </p>
+        )}
       </section>
 
       {isAddDialogOpen && (
