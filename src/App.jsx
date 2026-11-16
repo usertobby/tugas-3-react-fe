@@ -19,10 +19,21 @@ const formatPrice = (price) =>
 function App() {
   const [products, setProducts] = useState(initialProducts)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [editingProduct, setEditingProduct] = useState(null)
   const [formValues, setFormValues] = useState({ name: '', price: '' })
 
   const closeAddDialog = () => {
     setIsAddDialogOpen(false)
+    setFormValues({ name: '', price: '' })
+  }
+
+  const openEditDialog = (product) => {
+    setEditingProduct(product)
+    setFormValues({ name: product.name, price: String(product.price) })
+  }
+
+  const closeEditDialog = () => {
+    setEditingProduct(null)
     setFormValues({ name: '', price: '' })
   }
 
@@ -43,6 +54,23 @@ function App() {
       { id: nextId, name, price },
     ])
     closeAddDialog()
+  }
+
+  const handleEditSubmit = (event) => {
+    event.preventDefault()
+    const name = formValues.name.trim()
+    const price = Number(formValues.price)
+
+    if (!editingProduct || !name || !Number.isFinite(price) || price <= 0) return
+
+    setProducts((currentProducts) =>
+      currentProducts.map((product) =>
+        product.id === editingProduct.id
+          ? { ...product, name, price }
+          : product,
+      ),
+    )
+    closeEditDialog()
   }
 
   return (
@@ -76,6 +104,13 @@ function App() {
               <p className="product-id">ID: {product.id}</p>
               <h3>{product.name}</h3>
               <p className="product-price">{formatPrice(product.price)}</p>
+              <button
+                className="button button-secondary"
+                type="button"
+                onClick={() => openEditDialog(product)}
+              >
+                Edit
+              </button>
             </article>
           ))}
         </div>
@@ -142,6 +177,73 @@ function App() {
                 </button>
                 <button className="button button-primary" type="submit">
                   Simpan Produk
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
+
+      {editingProduct && (
+        <div className="modal-backdrop">
+          <section
+            className="product-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-dialog-title"
+          >
+            <button
+              className="dialog-close"
+              type="button"
+              aria-label="Tutup dialog"
+              onClick={closeEditDialog}
+            >
+              ×
+            </button>
+            <h2 id="edit-dialog-title">Edit Produk</h2>
+            <p className="dialog-description">
+              Perbarui informasi produk yang dipilih.
+            </p>
+            <p className="dialog-product-id">ID: {editingProduct.id}</p>
+
+            <form className="product-form" onSubmit={handleEditSubmit}>
+              <label htmlFor="edit-product-name">Nama Produk</label>
+              <input
+                id="edit-product-name"
+                name="name"
+                type="text"
+                value={formValues.name}
+                onChange={(event) =>
+                  setFormValues({ ...formValues, name: event.target.value })
+                }
+                required
+              />
+
+              <label htmlFor="edit-product-price">Harga (Rp)</label>
+              <input
+                id="edit-product-price"
+                name="price"
+                type="number"
+                min="1"
+                step="1"
+                value={formValues.price}
+                onChange={(event) =>
+                  setFormValues({ ...formValues, price: event.target.value })
+                }
+                required
+              />
+              <p className="field-hint">Harga harus lebih dari 0.</p>
+
+              <div className="dialog-actions">
+                <button
+                  className="button button-secondary"
+                  type="button"
+                  onClick={closeEditDialog}
+                >
+                  Batal
+                </button>
+                <button className="button button-primary" type="submit">
+                  Simpan Perubahan
                 </button>
               </div>
             </form>
