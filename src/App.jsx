@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import ikeaLogo from './assets/ikea-logo.jpg'
 import './App.css'
 
 const initialProducts = [
@@ -111,9 +112,9 @@ function App() {
   return (
     <main className="page-shell">
       <header className="topbar">
-        <a className="brand" href="/" aria-label="Produkly beranda">
-          <span className="brand-mark" aria-hidden="true">P</span>
-          <span>Produkly</span>
+        <a className="brand" href="/" aria-label="IKIYO beranda">
+          <img className="brand-logo" src={ikeaLogo} alt="" />
+          <span>IKIYO</span>
         </a>
 
         <label className="topbar-search">
@@ -130,7 +131,7 @@ function App() {
             type="search"
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
-            placeholder="Cari nama produk..."
+            placeholder="Cari barang favoritmu..."
             aria-label="Cari nama produk"
           />
           {searchTerm && (
@@ -149,10 +150,10 @@ function App() {
       <section className="product-section" aria-label="Daftar produk">
         <div className="management-header">
           <div>
-            <p className="eyebrow">Katalog</p>
+            <p className="eyebrow">Pusat kendali toko</p>
             <h1>Manajemen Produk</h1>
             <p className="page-description">
-              Kelola daftar produk dan harga dalam satu tempat.
+              Semua produk tertata, harga pun jelas.
             </p>
           </div>
           <button
@@ -369,7 +370,11 @@ function App() {
             >
               ×
             </button>
-            <span className="delete-icon" aria-hidden="true">⌫</span>
+            <span className="delete-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 6h18M8 6V4h8v2m3 0-.9 14H5.9L5 6m4 4v6m6-6v6" />
+              </svg>
+            </span>
             <h2 id="delete-dialog-title">Hapus Produk?</h2>
             <p className="dialog-description" id="delete-dialog-description">
               Produk yang dihapus tidak dapat dikembalikan.
