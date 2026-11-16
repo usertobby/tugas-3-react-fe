@@ -94,6 +94,7 @@
 }
 
 .product-price {
+  margin-bottom: 18px;
   color: #2563eb;
   font-size: 1.3rem;
   font-weight: 750;
@@ -190,6 +191,13 @@
 .dialog-description {
   margin-top: 8px;
   color: #667085;
+}
+
+.dialog-product-id {
+  margin-top: 20px;
+  color: #667085;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .product-form {
