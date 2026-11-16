@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 const initialProducts = [
@@ -15,6 +15,10 @@ const formatPrice = (price) =>
     currency: 'IDR',
     maximumFractionDigits: 0,
   }).format(price)
+
+const closeOnBackdropClick = (event, closeDialog) => {
+  if (event.target === event.currentTarget) closeDialog()
+}
 
 function App() {
   const [products, setProducts] = useState(initialProducts)
@@ -51,6 +55,22 @@ function App() {
     )
     setDeletingProduct(null)
   }
+
+  useEffect(() => {
+    if (!isAddDialogOpen && !editingProduct && !deletingProduct) return
+
+    const handleEscape = (event) => {
+      if (event.key !== 'Escape') return
+
+      setIsAddDialogOpen(false)
+      setEditingProduct(null)
+      setDeletingProduct(null)
+      setFormValues({ name: '', price: '' })
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [isAddDialogOpen, editingProduct, deletingProduct])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -173,7 +193,10 @@ function App() {
       </section>
 
       {isAddDialogOpen && (
-        <div className="modal-backdrop">
+        <div
+          className="modal-backdrop"
+          onClick={(event) => closeOnBackdropClick(event, closeAddDialog)}
+        >
           <section
             className="product-dialog"
             role="dialog"
@@ -241,7 +264,10 @@ function App() {
       )}
 
       {editingProduct && (
-        <div className="modal-backdrop">
+        <div
+          className="modal-backdrop"
+          onClick={(event) => closeOnBackdropClick(event, closeEditDialog)}
+        >
           <section
             className="product-dialog"
             role="dialog"
@@ -308,7 +334,12 @@ function App() {
       )}
 
       {deletingProduct && (
-        <div className="modal-backdrop">
+        <div
+          className="modal-backdrop"
+          onClick={(event) =>
+            closeOnBackdropClick(event, () => setDeletingProduct(null))
+          }
+        >
           <section
             className="product-dialog delete-dialog"
             role="alertdialog"
