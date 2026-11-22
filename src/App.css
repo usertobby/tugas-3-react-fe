@@ -176,6 +176,12 @@
   text-align: center;
 }
 
+.product-load-error {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
 .product-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -240,6 +246,11 @@
 
 .button:active {
   transform: translateY(1px);
+}
+
+.button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 .add-product-button {
@@ -372,6 +383,12 @@
 .field-hint {
   color: #667085;
   font-size: 0.82rem;
+}
+
+.form-error {
+  margin-top: 8px;
+  color: #c92a3a;
+  font-size: 0.9rem;
 }
 
 .dialog-actions {
