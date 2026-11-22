@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Route, Routes } from 'react-router'
 import ikeaLogo from './assets/ikea-logo.jpg'
 import './App.css'
 
@@ -21,7 +22,7 @@ const closeOnBackdropClick = (event, closeDialog) => {
   if (event.target === event.currentTarget) closeDialog()
 }
 
-function App() {
+function ProductManagementPage() {
   const [products, setProducts] = useState(initialProducts)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
@@ -408,6 +409,14 @@ function App() {
         </div>
       )}
     </main>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<ProductManagementPage />} />
+    </Routes>
   )
 }
 
