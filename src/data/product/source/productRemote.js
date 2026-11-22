@@ -34,6 +34,10 @@ export default function ProductRemote({ fetchImpl = fetch } = {}) {
     return request()
   }
 
+  async function getProductByIdRemote(id) {
+    return request(`/${id}`)
+  }
+
   async function createProductRemote(product) {
     return request('', {
       method: 'POST',
@@ -54,6 +58,7 @@ export default function ProductRemote({ fetchImpl = fetch } = {}) {
 
   return {
     getProductsRemote,
+    getProductByIdRemote,
     createProductRemote,
     updateProductRemote,
     deleteProductRemote,

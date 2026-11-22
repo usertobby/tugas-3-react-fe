@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import Button from '../../atoms/Button/index.jsx'
 import formatRupiah from '../../../utils/formatRupiah.js'
 
@@ -8,6 +9,13 @@ export default function ProductCard({ product, onEdit, onDelete }) {
       <h3>{product.name}</h3>
       <p className="product-price">{formatRupiah(product.price)}</p>
       <div className="product-actions">
+        <Link
+          className="button button-primary product-detail-link"
+          to={`/products/${product.id}`}
+          aria-label={`Lihat detail ${product.name}`}
+        >
+          Detail
+        </Link>
         <Button variant="secondary" onClick={() => onEdit(product)}>
           Edit
         </Button>
