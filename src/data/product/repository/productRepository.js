@@ -2,6 +2,7 @@ import ProductModel from '../model/productModel.js'
 
 export default function ProductRepository({
   getProductsRemote,
+  getProductByIdRemote,
   createProductRemote,
   updateProductRemote,
   deleteProductRemote,
@@ -23,6 +24,11 @@ export default function ProductRepository({
     return products.map((product) => product.toJSON())
   }
 
+  async function getProductById(id) {
+    const response = await getProductByIdRemote(id)
+    return ProductModel.fromResponse(response).toJSON()
+  }
+
   async function createProduct(product) {
     const response = await createProductRemote(product)
     return ProductModel.fromResponse(response).toJSON()
@@ -37,5 +43,11 @@ export default function ProductRepository({
     return deleteProductRemote(id)
   }
 
-  return { getProducts, createProduct, updateProduct, deleteProduct }
+  return {
+    getProducts,
+    getProductById,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+  }
 }
