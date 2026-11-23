@@ -4,6 +4,7 @@ import Button from '../../atoms/Button/index.jsx'
 import DeleteProductDialog from '../../organisms/DeleteProductDialog/index.jsx'
 import ProductFormDialog from '../../organisms/ProductFormDialog/index.jsx'
 import ProductGrid from '../../organisms/ProductGrid/index.jsx'
+import ProductViewSettings from '../../molecules/ProductViewSettings/index.jsx'
 import ProductRemote from '../../../data/product/source/productRemote.js'
 import ProductRepository from '../../../data/product/repository/productRepository.js'
 
@@ -11,6 +12,15 @@ const repository = ProductRepository(ProductRemote())
 
 function getErrorMessage(error, fallback) {
   return error instanceof Error ? error.message : fallback
+}
+
+function getSavedViewMode() {
+  try {
+    const savedViewMode = window.localStorage.getItem('ikiyo-product-view')
+    return savedViewMode === 'list' ? 'list' : 'grid'
+  } catch {
+    return 'grid'
+  }
 }
 
 export default function ProductsPage() {
@@ -26,6 +36,15 @@ export default function ProductsPage() {
   const [deleteError, setDeleteError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [viewMode, setViewMode] = useState(getSavedViewMode)
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('ikiyo-product-view', viewMode)
+    } catch {
+      // Preferensi tampilan tetap bisa digunakan selama sesi ini.
+    }
+  }, [viewMode])
 
   const loadProducts = useCallback(async () => {
     setIsLoading(true)
@@ -202,9 +221,12 @@ export default function ProductsPage() {
 
       <div className="section-heading">
         <h2>Daftar Produk</h2>
-        <span className="product-count" aria-live="polite">
-          Menampilkan {visibleProducts.length} dari {products.length} produk
-        </span>
+        <div className="product-list-controls">
+          <span className="product-count" aria-live="polite">
+            Menampilkan {visibleProducts.length} dari {products.length} produk
+          </span>
+          <ProductViewSettings viewMode={viewMode} onChange={setViewMode} />
+        </div>
       </div>
 
       {isLoading ? (
@@ -223,6 +245,7 @@ export default function ProductsPage() {
           products={visibleProducts}
           onEdit={openEditDialog}
           onDelete={openDeleteDialog}
+          viewMode={viewMode}
         />
       ) : (
         <p className="product-empty-state" role="status">
