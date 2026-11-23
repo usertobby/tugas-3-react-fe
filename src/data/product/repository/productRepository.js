@@ -21,7 +21,9 @@ export default function ProductRepository({
       throw new TypeError('ID produk dari API harus unik.')
     }
 
-    return products.map((product) => product.toJSON())
+    return products
+      .map((product) => product.toJSON())
+      .sort((first, second) => first.id - second.id)
   }
 
   async function getProductById(id) {
