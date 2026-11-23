@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import Button from '../../atoms/Button/index.jsx'
 import formatRupiah from '../../../utils/formatRupiah.js'
 
-export default function ProductCard({ product, onEdit, onDelete }) {
+export default function ProductCard({ product, onDelete }) {
   return (
     <article className="product-card">
       <p className="product-id">ID: {product.id}</p>
@@ -16,9 +16,6 @@ export default function ProductCard({ product, onEdit, onDelete }) {
         >
           Detail
         </Link>
-        <Button variant="secondary" onClick={() => onEdit(product)}>
-          Edit
-        </Button>
         <Button variant="danger-outline" onClick={() => onDelete(product)}>
           Hapus
         </Button>

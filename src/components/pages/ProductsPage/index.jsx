@@ -29,7 +29,6 @@ export default function ProductsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [editingProduct, setEditingProduct] = useState(null)
   const [deletingProduct, setDeletingProduct] = useState(null)
   const [formValues, setFormValues] = useState({ name: '', price: '' })
   const [formError, setFormError] = useState('')
@@ -64,13 +63,12 @@ export default function ProductsPage() {
   }, [loadProducts])
 
   useEffect(() => {
-    const hasOpenDialog = isAddDialogOpen || editingProduct || deletingProduct
+    const hasOpenDialog = isAddDialogOpen || deletingProduct
     if (!hasOpenDialog) return
 
     const handleEscape = (event) => {
       if (event.key !== 'Escape') return
       setIsAddDialogOpen(false)
-      setEditingProduct(null)
       setDeletingProduct(null)
       setFormValues({ name: '', price: '' })
       setFormError('')
@@ -79,7 +77,7 @@ export default function ProductsPage() {
 
     window.addEventListener('keydown', handleEscape)
     return () => window.removeEventListener('keydown', handleEscape)
-  }, [isAddDialogOpen, editingProduct, deletingProduct])
+  }, [isAddDialogOpen, deletingProduct])
 
   const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase('id-ID')
   const visibleProducts = products.filter((product) =>
@@ -96,18 +94,6 @@ export default function ProductsPage() {
     setFormValues({ name: '', price: '' })
     setFormError('')
     setIsAddDialogOpen(true)
-  }
-
-  function openEditDialog(product) {
-    setEditingProduct(product)
-    setFormValues({ name: product.name, price: String(product.price) })
-    setFormError('')
-  }
-
-  function closeEditDialog() {
-    setEditingProduct(null)
-    setFormValues({ name: '', price: '' })
-    setFormError('')
   }
 
   function openDeleteDialog(product) {
@@ -151,38 +137,6 @@ export default function ProductsPage() {
     }
   }
 
-  async function handleUpdate(event) {
-    event.preventDefault()
-    const name = formValues.name.trim()
-    const price = Number(formValues.price)
-
-    if (!editingProduct || !name || !Number.isFinite(price) || price <= 0) {
-      setFormError('Masukkan nama produk dan harga lebih dari 0.')
-      return
-    }
-
-    setIsSubmitting(true)
-    setFormError('')
-
-    try {
-      const updatedProduct = await repository.updateProduct({
-        id: editingProduct.id,
-        name,
-        price,
-      })
-      setProducts((currentProducts) =>
-        currentProducts.map((product) =>
-          product.id === updatedProduct.id ? updatedProduct : product,
-        ),
-      )
-      closeEditDialog()
-    } catch (error) {
-      setFormError(getErrorMessage(error, 'Produk gagal diperbarui.'))
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   async function handleDelete() {
     if (!deletingProduct) return
 
@@ -201,8 +155,6 @@ export default function ProductsPage() {
       setIsDeleting(false)
     }
   }
-
-  const dialogMode = isAddDialogOpen ? 'create' : editingProduct ? 'edit' : null
 
   return (
     <section className="product-section" aria-label="Daftar produk">
@@ -243,7 +195,6 @@ export default function ProductsPage() {
       ) : visibleProducts.length > 0 ? (
         <ProductGrid
           products={visibleProducts}
-          onEdit={openEditDialog}
           onDelete={openDeleteDialog}
           viewMode={viewMode}
         />
@@ -256,14 +207,14 @@ export default function ProductsPage() {
       )}
 
       <ProductFormDialog
-        mode={dialogMode}
-        product={editingProduct}
+        mode={isAddDialogOpen ? 'create' : null}
+        product={null}
         values={formValues}
         error={formError}
         isSubmitting={isSubmitting}
         onChange={handleFormChange}
-        onClose={isAddDialogOpen ? closeAddDialog : closeEditDialog}
-        onSubmit={isAddDialogOpen ? handleCreate : handleUpdate}
+        onClose={closeAddDialog}
+        onSubmit={handleCreate}
       />
       <DeleteProductDialog
         product={deletingProduct}
